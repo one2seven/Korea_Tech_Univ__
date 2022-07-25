@@ -10,6 +10,9 @@ namespace Motion
 {
     public class Servo : Actuator, ICfgServo, ITeachServo
     {
+
+        public Dictionary<string, double> Parameter;
+
         #region Field
         #region Limit sensor
         private bool _home;
@@ -175,8 +178,16 @@ namespace Motion
             _posDec = 10;
             _pSWLimit = 2000000;
             _nSWLimit = -2000000;
+        }
+
+        public void Read_Para()
+        {
+
+
 
         }
+
+
         public void Init()
         {
             MMCLib.set_amp_enable_level(_axNo, 0);
