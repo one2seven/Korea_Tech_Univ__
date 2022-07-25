@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PC_Senior_Day12_MotionKit", "PC_Senior_Day12_MotionKit\PC_Senior_Day12_MotionKit.csproj", "{09877DC0-F99D-4ADF-BE1C-088288906A08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servo", "Servo\Servo.csproj", "{56A7B96C-47D5-422B-B5FB-BC8B80D66282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Actuator", "Actuator\Actuator.csproj", "{57874459-B904-4740-A583-D07F2B4ED900}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionKit", "MotionKit\MotionKit.csproj", "{470FF7D9-02C1-40D9-96A3-72BF4D11FEE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cylinder", "Cylinder\Cylinder.csproj", "{A27CA777-933C-48DC-B8F9-5E47C76AD1D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalIO", "DigitalIO\DigitalIO.csproj", "{E93ADCED-CE7A-44BA-B3BD-D05F4FCE73A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09877DC0-F99D-4ADF-BE1C-088288906A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09877DC0-F99D-4ADF-BE1C-088288906A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09877DC0-F99D-4ADF-BE1C-088288906A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09877DC0-F99D-4ADF-BE1C-088288906A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A7B96C-47D5-422B-B5FB-BC8B80D66282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A7B96C-47D5-422B-B5FB-BC8B80D66282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A7B96C-47D5-422B-B5FB-BC8B80D66282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A7B96C-47D5-422B-B5FB-BC8B80D66282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57874459-B904-4740-A583-D07F2B4ED900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57874459-B904-4740-A583-D07F2B4ED900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57874459-B904-4740-A583-D07F2B4ED900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57874459-B904-4740-A583-D07F2B4ED900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{470FF7D9-02C1-40D9-96A3-72BF4D11FEE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{470FF7D9-02C1-40D9-96A3-72BF4D11FEE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{470FF7D9-02C1-40D9-96A3-72BF4D11FEE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{470FF7D9-02C1-40D9-96A3-72BF4D11FEE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27CA777-933C-48DC-B8F9-5E47C76AD1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27CA777-933C-48DC-B8F9-5E47C76AD1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27CA777-933C-48DC-B8F9-5E47C76AD1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27CA777-933C-48DC-B8F9-5E47C76AD1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93ADCED-CE7A-44BA-B3BD-D05F4FCE73A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93ADCED-CE7A-44BA-B3BD-D05F4FCE73A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93ADCED-CE7A-44BA-B3BD-D05F4FCE73A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93ADCED-CE7A-44BA-B3BD-D05F4FCE73A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D7820B7-CF1F-4A57-8410-32D231179A70}
+	EndGlobalSection
+EndGlobal
