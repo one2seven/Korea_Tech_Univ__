@@ -16,7 +16,7 @@ namespace MMCWHPNET
     public partial class MMCLib
     {
         // DLL name should be specified what you have.
-        public const string MMC_DLL_NAME = @"E:\0725\PC_Senior_Day12_MotionKit\mmcwhp300.dll";
+        public const string MMC_DLL_NAME = "mmcwhp300.dll";
         // axis_source status
         public enum MMCSTS : int
         {

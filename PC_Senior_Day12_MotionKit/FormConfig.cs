@@ -15,53 +15,153 @@ namespace PC_Senior_Day12_MotionKit
     public partial class FormConfig : Form
     {
         IConfig cart;
+
+        Dictionary<string,TextBox> pair = new Dictionary<string,TextBox>();
+        string path; 
         public FormConfig(IConfig cart)
         {
             InitializeComponent();
+            path = @"f:\Parameter.txt";
+
             this.cart = cart;
+            pair = new Dictionary<string, TextBox>();
+            Init_config();
+            
         }
 
-        private void btnAx_Save_Click(object sender, EventArgs e)
+
+        private void Init_config()
         {
-            string path = @"Parameter.txt";
-
-            Button btn = sender as Button;
-            Control ct = btn.Parent;            
-
-            using (FileStream fs = File.Create(path))
+            foreach (var ct in Controls)
             {
-
-                foreach (var ctr in ct.Controls)
+                if (ct is GroupBox)
                 {
-                    if (ctr is TextBox)
+                    GroupBox gb = ct as GroupBox;
+
+                    foreach (var ctr in gb.Controls)
                     {
-                        TextBox tb = ctr as TextBox;
-                        StringBuilder sb = new StringBuilder();
-                        string Axis_ch = tb.Name.ToString().Split('_')[1];
-                        string para_name = tb.Name.ToString().Split('_')[2];
-                        string value = tb.Text.ToString();
-                        int axis = Axis_ch == "X" ? 0 : Axis_ch == "Y" ? 1 : 2;
-
-                        sb.AppendLine($"{Axis_ch}_{para_name}={value}");
-
-                        AddText(fs,sb.ToString());
+                        if (ctr is TextBox)
+                        {
+                            TextBox tb = ctr as TextBox;
+                            string key = tb.Name.ToString();
+                            pair[key] = tb;
+                        }
                     }
                 }
+            }
 
+            File_Read();
+            Apply_para();
+        }
 
-            
+        private void Apply_para()
+        {
+
+            for (int i=0; i<3; i++)
+            {
+                string axis = i == 0 ? "X" : i == 1 ? "Y" : "Z";
+                string key = $"tbAx_{axis}_";
+
+                cart.CfgAxInfo[i].InchSpd = double.Parse(pair[$"{key}InchSpd"].Text.ToString());
+                cart.CfgAxInfo[i].InchAcc = short.Parse(pair[$"{key}InchAcc"].Text.ToString());
+                cart.CfgAxInfo[i].InchDec = short.Parse(pair[$"{key}InchDec"].Text.ToString());
+                cart.CfgAxInfo[i].JogSpd = double.Parse(pair[$"{key}JogSpd"].Text.ToString());
+                cart.CfgAxInfo[i].JogAcc = short.Parse(pair[$"{key}JogAcc"].Text.ToString());
+                cart.CfgAxInfo[i].JogDec = short.Parse(pair[$"{key}JogDec"].Text.ToString());
+                cart.CfgAxInfo[i].PosSpd = double.Parse(pair[$"{key}PosSpd"].Text.ToString());
+                cart.CfgAxInfo[i].PosAcc = short.Parse(pair[$"{key}PosAcc"].Text.ToString());
+                cart.CfgAxInfo[i].PosDec = short.Parse(pair[$"{key}PosDec"].Text.ToString());
 
 
             }
 
+            cart.PosMovSpd = double.Parse(pair[$"tbAx_X_PosSpd"].Text.ToString());
+            cart.PosMovAcc = short.Parse(pair[$"tbAx_X_PosAcc"].Text.ToString());
+            cart.PosMovDec = short.Parse(pair[$"tbAx_X_PosDec"].Text.ToString());
+            cart.ZRSpd3 = double.Parse(pair[$"tbAx_X_OrgSpd3"].Text.ToString());
+            cart.ZRSpd2 = double.Parse(pair[$"tbAx_X_OrgSpd2"].Text.ToString());
+            cart.ZRSpd1 = double.Parse(pair[$"tbAx_X_OrgSpd1"].Text.ToString());
+            cart.ZRAcc1 =  short.Parse(pair[$"tbAx_X_OrgAcc"].Text.ToString());
+            cart.ZRAcc2 =  short.Parse(pair[$"tbAx_X_OrgAcc"].Text.ToString());
+            cart.ZRAcc3 =  short.Parse(pair[$"tbAx_X_OrgAcc"].Text.ToString());
+            cart.ZRDec1 =  short.Parse(pair[$"tbAx_X_OrgDec"].Text.ToString());
+            cart.ZRDec2 =  short.Parse(pair[$"tbAx_X_OrgDec"].Text.ToString());
+            cart.ZRDec3 =  short.Parse(pair[$"tbAx_X_OrgDec"].Text.ToString());        
+
+        }
+
+        private void File_Read()
+        {
+            string[] para_file = File.ReadAllLines(path);
+
+            foreach(string para in para_file)
+            {
+                string key = para.Split('=')[0];
+                string val = para.Split('=')[1];
+
+                pair[key].Text = val;
+            }
+
+        }
+
+
+        private void File_Save()
+        {          
+
+            using (FileStream fs = File.Create(path))
+            {
+                foreach (TextBox tb in pair.Values)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine($"{tb.Name.ToString()}={tb.Text.ToString()}");
+                    AddText(fs, sb.ToString());
+                }
+            }
             void AddText(FileStream fs, string value)
             {
                 byte[] info = new UTF8Encoding(true).GetBytes(value);
                 fs.Write(info, 0, info.Length);
             }
 
+            Apply_para();
         }
 
 
+
+        private void btnAx_Save_Click(object sender, EventArgs e)
+        {
+            
+            //Button btn = sender as Button;
+            //Control ct = btn.Parent;
+
+            //    foreach (var ctr in ct.Controls)
+            //    {
+            //        if (ctr is TextBox)
+            //        {
+            //            TextBox tb = ctr as TextBox;
+            //            StringBuilder sb = new StringBuilder();
+            //            string key = tb.Name.ToString();
+            //            string Axis_ch = tb.Name.ToString().Split('_')[1];
+            //            string para_name = tb.Name.ToString().Split('_')[2];
+            //            string value = tb.Text.ToString();
+            //            int axis = Axis_ch == "X" ? 0 : Axis_ch == "Y" ? 1 : 2;
+            //        }
+            //    }
+
+            File_Save();
+        }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            File_Save();
+            File_Read();
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+
+        }
     }
 }

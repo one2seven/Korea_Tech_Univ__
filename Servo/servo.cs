@@ -10,9 +10,6 @@ namespace Motion
 {
     public class Servo : Actuator, ICfgServo, ITeachServo
     {
-
-        public Dictionary<string, double> Parameter;
-
         #region Field
         #region Limit sensor
         private bool _home;
@@ -36,6 +33,8 @@ namespace Motion
         private short _posAcc;
         private short _posDec;
         private double _pSWLimit, _nSWLimit;
+        private bool _axisDone;
+
         #endregion
         #endregion
         #region Property
@@ -159,6 +158,18 @@ namespace Motion
             get { return _nSWLimit; }
         }
 
+        public bool AxisDone 
+        { get => _axisDone;
+            set { 
+                if (_axisDone != value)
+                {
+                    _axisDone = value;
+                }
+                
+                _axisDone = value; } 
+        
+        }
+
         #endregion
         #region Method
         /// <summary>
@@ -178,16 +189,8 @@ namespace Motion
             _posDec = 10;
             _pSWLimit = 2000000;
             _nSWLimit = -2000000;
-        }
-
-        public void Read_Para()
-        {
-
-
 
         }
-
-
         public void Init()
         {
             MMCLib.set_amp_enable_level(_axNo, 0);
@@ -236,7 +239,7 @@ namespace Motion
             MMCLib.fset_home(_axNo, NO_Event);
             MMCLib.fset_home_level(_axNo, LOW);
             MMCLib.fset_amp_fault_level(_axNo, HIGH);
-            MMCLib.fset_amp_fault(_axNo, E_STOP);
+            MMCLib.fset_amp_fault(_axNo, STOP);
             MMCLib.fset_amp_reset_level(_axNo, LOW);
             MMCLib.fset_inposition_level(_axNo, LOW);
             MMCLib.fset_coordinate_direction(_axNo, coordDir);
@@ -290,23 +293,17 @@ namespace Motion
         /// </summary>
         public void InfoUpdate()
         {
-            try
-            {
-                short state = 0;
-                //MMCLib.get_amp_enable(_axNo, ref state);
-                _svAmpEnable = state == 1 ? true : false;
+            short state = 0;
+            MMCLib.get_amp_enable(_axNo, ref state);
+            _svAmpEnable = state == 1 ? true : false;
 
-                MMCLib.get_command(_axNo, ref _cmdPos);
-                MMCLib.get_position(_axNo, ref _encoder);
-                MMCLib.get_error(_axNo, ref _errPos);
-                MMCLib.get_counter(_axNo, ref _actPos);
-                _actSpd = MMCLib.get_velocity(_axNo);
-                Update_Sensor_sts();
-            }
-            catch
-            {
-
-            }
+            MMCLib.get_command(_axNo, ref _cmdPos);
+            MMCLib.get_position(_axNo, ref _encoder);
+            MMCLib.get_error(_axNo, ref _errPos);
+            MMCLib.get_counter(_axNo, ref _actPos);
+            _actSpd = MMCLib.get_velocity(_axNo);
+            AxisDone= MMCLib.in_sequence(_axNo) == 0 ? true : false; 
+            Update_Sensor_sts();
         }
 
         public void Update_Sensor_sts()
@@ -370,6 +367,13 @@ namespace Motion
             MMCLib.v_move_stop(_axNo);
         }
 
+
+        public void PosMove(double pnt)
+        {
+           // AxisDone = false;
+            MMCLib.start_move(_axNo, pnt, _posSpd, _posAcc);
+
+        }
 
 
         /// <summary>

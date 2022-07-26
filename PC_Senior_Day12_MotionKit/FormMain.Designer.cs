@@ -105,10 +105,9 @@
             this.tbAx_X_ComPos = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.btn_ZR = new System.Windows.Forms.Button();
             this.Timer_ZR = new System.Windows.Forms.Timer(this.components);
+            this.btn_Init_Postion = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -121,7 +120,7 @@
             // 
             // btnFormConfig
             // 
-            this.btnFormConfig.Location = new System.Drawing.Point(659, 23);
+            this.btnFormConfig.Location = new System.Drawing.Point(659, 215);
             this.btnFormConfig.Name = "btnFormConfig";
             this.btnFormConfig.Size = new System.Drawing.Size(129, 62);
             this.btnFormConfig.TabIndex = 0;
@@ -131,7 +130,7 @@
             // 
             // btnFormTeaching
             // 
-            this.btnFormTeaching.Location = new System.Drawing.Point(659, 91);
+            this.btnFormTeaching.Location = new System.Drawing.Point(659, 23);
             this.btnFormTeaching.Name = "btnFormTeaching";
             this.btnFormTeaching.Size = new System.Drawing.Size(129, 62);
             this.btnFormTeaching.TabIndex = 1;
@@ -141,7 +140,7 @@
             // 
             // btnFormDIO
             // 
-            this.btnFormDIO.Location = new System.Drawing.Point(659, 159);
+            this.btnFormDIO.Location = new System.Drawing.Point(659, 87);
             this.btnFormDIO.Name = "btnFormDIO";
             this.btnFormDIO.Size = new System.Drawing.Size(129, 62);
             this.btnFormDIO.TabIndex = 2;
@@ -458,6 +457,7 @@
             this.button1.TabIndex = 14;
             this.button1.Text = "종료";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // timer_MotionKitInfo_Update
             // 
@@ -466,11 +466,11 @@
             // 
             // btn_Servo_Init
             // 
-            this.btn_Servo_Init.Location = new System.Drawing.Point(659, 227);
+            this.btn_Servo_Init.Location = new System.Drawing.Point(502, 52);
             this.btn_Servo_Init.Name = "btn_Servo_Init";
-            this.btn_Servo_Init.Size = new System.Drawing.Size(129, 62);
+            this.btn_Servo_Init.Size = new System.Drawing.Size(111, 23);
             this.btn_Servo_Init.TabIndex = 15;
-            this.btn_Servo_Init.Text = "Servo_Init";
+            this.btn_Servo_Init.Text = "All_Init(Debug)";
             this.btn_Servo_Init.UseVisualStyleBackColor = true;
             this.btn_Servo_Init.Click += new System.EventHandler(this.btn_Servo_Init_Click);
             // 
@@ -896,37 +896,17 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(502, 12);
+            this.button2.Location = new System.Drawing.Point(502, 23);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(93, 35);
+            this.button2.Size = new System.Drawing.Size(111, 24);
             this.button2.TabIndex = 23;
-            this.button2.Text = "X_Home";
+            this.button2.Text = "Home(Debug)";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(502, 59);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(93, 35);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "Y_Home";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(502, 105);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(93, 35);
-            this.button4.TabIndex = 25;
-            this.button4.Text = "Z_Home";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // btn_ZR
             // 
-            this.btn_ZR.Location = new System.Drawing.Point(659, 295);
+            this.btn_ZR.Location = new System.Drawing.Point(659, 150);
             this.btn_ZR.Name = "btn_ZR";
             this.btn_ZR.Size = new System.Drawing.Size(129, 62);
             this.btn_ZR.TabIndex = 26;
@@ -938,14 +918,23 @@
             // 
             this.Timer_ZR.Tick += new System.EventHandler(this.Timer_ZR_Tick);
             // 
+            // btn_Init_Postion
+            // 
+            this.btn_Init_Postion.Location = new System.Drawing.Point(659, 281);
+            this.btn_Init_Postion.Name = "btn_Init_Postion";
+            this.btn_Init_Postion.Size = new System.Drawing.Size(129, 62);
+            this.btn_Init_Postion.TabIndex = 27;
+            this.btn_Init_Postion.Text = "초기위치";
+            this.btn_Init_Postion.UseVisualStyleBackColor = true;
+            this.btn_Init_Postion.Click += new System.EventHandler(this.btn_Init_Postion_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 528);
+            this.Controls.Add(this.btn_Init_Postion);
             this.Controls.Add(this.btn_ZR);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox11);
@@ -1057,10 +1046,9 @@
         private System.Windows.Forms.TextBox tbAx_X_ComPos;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button btn_ZR;
         private System.Windows.Forms.Timer Timer_ZR;
+        private System.Windows.Forms.Button btn_Init_Postion;
     }
 }
 

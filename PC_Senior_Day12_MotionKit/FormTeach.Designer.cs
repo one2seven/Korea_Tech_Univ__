@@ -153,6 +153,7 @@
             this.btnPnPMove.Tag = "1010";
             this.btnPnPMove.Text = "이동";
             this.btnPnPMove.UseVisualStyleBackColor = true;
+            this.btnPnPMove.Click += new System.EventHandler(this.btnPnPMove_Click);
             // 
             // label12
             // 
@@ -273,6 +274,7 @@
             this.btnZ_PosMove.TabIndex = 89;
             this.btnZ_PosMove.Text = "좌표 이동";
             this.btnZ_PosMove.UseVisualStyleBackColor = true;
+            this.btnZ_PosMove.Click += new System.EventHandler(this.btnZ_PosMove_Click);
             // 
             // cbZ_PosSelect
             // 
@@ -291,8 +293,10 @@
             this.btnZ_Pos02_Save.Name = "btnZ_Pos02_Save";
             this.btnZ_Pos02_Save.Size = new System.Drawing.Size(42, 37);
             this.btnZ_Pos02_Save.TabIndex = 87;
+            this.btnZ_Pos02_Save.Tag = "1";
             this.btnZ_Pos02_Save.Text = "좌표 저장";
             this.btnZ_Pos02_Save.UseVisualStyleBackColor = true;
+            this.btnZ_Pos02_Save.Click += new System.EventHandler(this.btnZ_Save_Click);
             // 
             // btnZ_Pos01_Save
             // 
@@ -300,8 +304,10 @@
             this.btnZ_Pos01_Save.Name = "btnZ_Pos01_Save";
             this.btnZ_Pos01_Save.Size = new System.Drawing.Size(42, 37);
             this.btnZ_Pos01_Save.TabIndex = 87;
+            this.btnZ_Pos01_Save.Tag = "0";
             this.btnZ_Pos01_Save.Text = "좌표 저장";
             this.btnZ_Pos01_Save.UseVisualStyleBackColor = true;
+            this.btnZ_Pos01_Save.Click += new System.EventHandler(this.btnZ_Save_Click);
             // 
             // label7
             // 
@@ -373,6 +379,7 @@
             this.btnXY_PosMove.TabIndex = 82;
             this.btnXY_PosMove.Text = "좌표 이동";
             this.btnXY_PosMove.UseVisualStyleBackColor = true;
+            this.btnXY_PosMove.Click += new System.EventHandler(this.btnXY_PosMove_Click);
             // 
             // cbXY_PosSelect
             // 
@@ -399,6 +406,7 @@
             this.btnXY_PosSave.TabIndex = 80;
             this.btnXY_PosSave.Text = "좌표 저장";
             this.btnXY_PosSave.UseVisualStyleBackColor = true;
+            this.btnXY_PosSave.Click += new System.EventHandler(this.btnXY_PosSave_Click);
             // 
             // label6
             // 

@@ -18,6 +18,9 @@ namespace MainControl
         short ZRDec1 { get; set; }
         short ZRDec2 { get; set; }
         short ZRDec3 { get; set; }
+        double PosMovSpd { get; set; }
+        short PosMovAcc { get ; set;}
+        short PosMovDec { get; set; }
         ICfgServo[] CfgAxInfo { get; }
     }
 }

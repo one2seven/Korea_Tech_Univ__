@@ -7,7 +7,8 @@ using System.Threading;
 using System.Drawing;
 using Motion;
 using DigitalIO;
-using MMCWHPNET; 
+using MMCWHPNET;
+using System.IO;
 
 namespace MainControl
 {
@@ -24,6 +25,10 @@ namespace MainControl
         private short _zrDec1, _zrDec2, _zrDec3, tempJogDec;
         private Msg zrRpt;
         private int zrStep;
+        double _posMovSpd;
+        short _posMovAcc;
+        short _posMovDec;
+        bool _orgin_check;
 
         #endregion
         #region Property
@@ -139,7 +144,13 @@ namespace MainControl
         public ITeachServo[] IAxes
         { get { return _axes; } }
 
-        public int ZR_Step { get { return zrStep; } set { zrStep = value; } } 
+        public int ZR_Step { get { return zrStep; } set { zrStep = value; } }
+
+        public double PosMovSpd { get => _posMovSpd; set => _posMovSpd = value; }
+        public short PosMovAcc { get => _posMovAcc; set => _posMovAcc = value; }
+        public short PosMovDec { get => _posMovDec; set => _posMovDec = value; }
+
+        public bool Origin_Check { get { return _orgin_check; } set { _orgin_check = value; } }
 
 
         #endregion
@@ -167,6 +178,12 @@ namespace MainControl
             _zrSpd3 = 500;
             _zrAcc3 = 5;
             _zrDec3 = 5;
+            _posMovSpd = 30000;
+            _posMovAcc = 10;
+            _orgin_check = false;
+
+            Teaching_Load();
+
         }
 
         
@@ -282,6 +299,7 @@ namespace MainControl
                 case 100:// end
                     zrRpt = Msg.COMPLETE;
                     zrStep = 101;
+                    _orgin_check = true;
                     break;
                 case 101:
                     if (cmd == Msg.END)
@@ -296,8 +314,15 @@ namespace MainControl
         /// <summary>
         /// 초기 위치 이동
         /// </summary>
+        /// 
+   
         public void MoveInitPos()
         {
+            if (Origin_Check == false) return;
+
+            Axes[0].PosMove(XY_Pt[0].X);
+            Axes[1].PosMove(XY_Pt[0].Y);
+            Axes[2].PosMove(ZPt[0]);
 
         }
         /// <summary>
@@ -308,9 +333,65 @@ namespace MainControl
             _axes[0].InfoUpdate();
             _axes[1].InfoUpdate();
             _axes[2].InfoUpdate();
+        }
 
+        public void Teaching_Load()
+        {
+            string path = @"f:\Teaching.txt";
+
+            string[] fs = File.ReadAllLines(path);
+            
+            foreach(string line in fs)
+            {
+                string[] temp = line.Split(':');
+                int num = int.Parse(temp[0].Split('_')[1]);
+                string val = temp[1];
+
+                //Position_8:{X=84000,Y=28000}
+                Point pp = new Point();
+
+                if (num < 9)
+                {
+                    pp.X = int.Parse(val.Split(',')[0].Split('=')[1].ToString());
+                    pp.Y = int.Parse(val.Split(',')[1].Split('=')[1].Split('}')[0].ToString());
+
+                    XY_Pt[num - 1] = pp;
+                }
+                else
+                {
+                    ZPt[num - 9] = int.Parse(val);
+                }
+
+            }
+        }
+
+        public void Teaching_Save()
+        {
+            string path = @"f:\Teaching.txt";
+            StringBuilder sb = new StringBuilder();
+
+            using (FileStream fs = File.Create(path))
+            {
+                for(int i =0; i<XY_Pt.Length; i++)
+                {
+                    sb.AppendLine($"Position_{i + 1}:{XY_Pt[i].ToString()}");                    
+                }
+
+                Addfile(fs, sb.ToString());
+                Addfile(fs, $"Position_9:{ZPt[0]}\r\n");
+                Addfile(fs, $"Position_10:{ZPt[1]}");
+            }
+
+            void Addfile(FileStream fs, string value)
+            {
+                byte[] info = new UTF8Encoding(true).GetBytes(value);
+                fs.Write(info, 0, info.Length);
+            }
 
         }
+
+
+
 
         /// <summary>
         /// XY Table 좌표 이동
@@ -319,13 +400,34 @@ namespace MainControl
         public void XY_PosMove(int ptNo)
         {
 
+            if (ptNo < 0) return;
+
+            //Axes[0].PosMove(XY_Pt[ptNo].X);
+            //Axes[1].PosMove(XY_Pt[ptNo].Y);
+
+            short axNum = 2;
+            short[] axMap = new short[2] { 0, 1 };
+            MMCLib.map_axes(axNum, axMap);
+            MMCLib.set_move_speed(_posMovSpd);
+            MMCLib.set_move_accel(_posMovAcc);
+            MMCLib.move_2(XY_Pt[ptNo].X, XY_Pt[ptNo].Y);
+
         }
         /// <summary>
         /// XY 좌표 저장
         /// </summary>
         public void XY_PosSave()
         {
+            Point start_p = new Point();
 
+            start_p.X = int.Parse(Axes[0].ActPos.ToString());
+            start_p.Y = int.Parse(Axes[1].ActPos.ToString());
+
+            for ( int i=0; i<8; i++)
+            {
+                XY_Pt[i].X = start_p.X + (i%4)*28*1000;                
+                XY_Pt[i].Y = start_p.Y + (i/4)*28*1000;
+            }
         }
         /// <summary>
         /// Z축 좌표 이동
@@ -333,13 +435,16 @@ namespace MainControl
         /// <param name="ptNo">좌표 번호 : 1 ~ 2</param>
         public void Z_PosMove(int ptNo)
         {
+            if (ptNo < 0) return;
 
+            Axes[2].PosMove(ZPt[ptNo]);
         }
         /// <summary>
         /// Z축 좌표 저장
         /// </summary>
         public void Z_PosSave(int ptNo)
         {
+           ZPt[ptNo]= int.Parse(Axes[2].ActPos.ToString());
 
         }
         /// <summary>
@@ -350,15 +455,57 @@ namespace MainControl
         public void PickupPlace(int startPtNo, int destPtNo)
         {
 
+            if (startPtNo < 0 || destPtNo<0) return;
+
+            Z_PosMove(0);
+            WaitMove();
+
+            XY_PosMove(startPtNo);
+            WaitMove();
+
+            Z_PosMove(1);
+            WaitMove();
+
+            Z_PosMove(0);
+            WaitMove();
+
+            XY_PosMove(destPtNo);
+            WaitMove();
+
+            Z_PosMove(1);
+            WaitMove();
+
+            Z_PosMove(0);
         }
 
-        void ITeach.Set_NSW_Limit(double pos)
+        void WaitMove()
         {
+
+            int cnt = 0;
+            while (true)
+            {
+                Axes[0].InfoUpdate();
+                Axes[1].InfoUpdate();
+                Axes[2].InfoUpdate();
+
+                if (Axes[0].AxisDone && Axes[1].AxisDone && Axes[2].AxisDone)
+                    break;
+                else
+                {
+                    int sss = 0;
+                }
+
+                Thread.Sleep(100);
+                cnt++;
+                if (cnt > 100)
+                {
+                    break;
+                }
+
+            }
+
         }
 
-        void ITeach.Set_PSW_Limit(double pos)
-        {
-        }
         #endregion
 
 

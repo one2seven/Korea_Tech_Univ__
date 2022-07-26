@@ -26,9 +26,9 @@ namespace PC_Senior_Day12_MotionKit
         {
             short retErr = cart.Init();
             if (retErr != 0)
-                MessageBox.Show("MMC 보드 초기화 실패 Code : " + retErr.ToString());            
+                lbMsg.Text = "MMC 보드 초기화 실패 Code : " + retErr.ToString();    
             else
-                MessageBox.Show("MMC 보드 초기화 성공");
+                lbMsg.Text = "MMC 보드 초기화 성공";
 
             timer_MotionKitInfo_Update.Start();
         }
@@ -147,7 +147,7 @@ namespace PC_Senior_Day12_MotionKit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            cart[0].origin();
+            cart.Origin_Check = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -165,6 +165,26 @@ namespace PC_Senior_Day12_MotionKit
             cmdZR = Msg.START;
             axis_num = 0;
             Timer_ZR.Start();   
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            DialogResult dr = MessageBox.Show("프로그램을 종료 하시겠습니까?",
+                                              "프로그램 종료 메세지",
+                                              MessageBoxButtons.YesNo,
+                                              MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) Application.Exit();
+        }
+
+        private void btn_Init_Postion_Click(object sender, EventArgs e)
+        {
+            if (cart.Origin_Check == false)
+            {
+                MessageBox.Show("원점복귀가 되지않았습니다.");
+            }
+
+            cart.MoveInitPos();
         }
 
         private void Timer_ZR_Tick(object sender, EventArgs e)
@@ -190,6 +210,7 @@ namespace PC_Senior_Day12_MotionKit
             {
                 cmdZR = Msg.CHECK;
                 Timer_ZR.Stop();
+                cart.Origin_Check = true;
             }
 
         }
