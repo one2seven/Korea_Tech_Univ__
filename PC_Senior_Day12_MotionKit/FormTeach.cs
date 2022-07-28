@@ -181,5 +181,18 @@ namespace PC_Senior_Day12_MotionKit
             }
 
         }
+
+        private void btnCylOpen_Click(object sender, EventArgs e)
+        {
+            _cart.Gripper.Open();
+
+        }
+
+        private void btnCylClose_Click(object sender, EventArgs e)
+        {
+            _cart.Gripper.Close();
+
+
+        }
     }
 }

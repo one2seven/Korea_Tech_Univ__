@@ -56,6 +56,13 @@ namespace PC_Senior_Day12_MotionKit
 
         private void Apply_para()
         {
+            foreach(var value in pair.Values)
+            {
+                if (value.Text == "")
+                {
+                    return;
+                }
+            }
 
             for (int i=0; i<3; i++)
             {
@@ -71,8 +78,6 @@ namespace PC_Senior_Day12_MotionKit
                 cart.CfgAxInfo[i].PosSpd = double.Parse(pair[$"{key}PosSpd"].Text.ToString());
                 cart.CfgAxInfo[i].PosAcc = short.Parse(pair[$"{key}PosAcc"].Text.ToString());
                 cart.CfgAxInfo[i].PosDec = short.Parse(pair[$"{key}PosDec"].Text.ToString());
-
-
             }
 
             cart.PosMovSpd = double.Parse(pair[$"tbAx_X_PosSpd"].Text.ToString());
@@ -92,16 +97,27 @@ namespace PC_Senior_Day12_MotionKit
 
         private void File_Read()
         {
-            string[] para_file = File.ReadAllLines(path);
-
-            foreach(string para in para_file)
+            try
             {
-                string key = para.Split('=')[0];
-                string val = para.Split('=')[1];
+                string[] para_file = File.ReadAllLines(path);
 
-                pair[key].Text = val;
+                foreach (string para in para_file)
+                {
+                    string key = para.Split('=')[0];
+                    string val = para.Split('=')[1];
+
+                    pair[key].Text = val;
+                }
             }
 
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show($"파일 경로 확인바랍니다 : {e.Message}");
+            }
+            catch
+            {
+
+            }
         }
 
 
@@ -130,23 +146,25 @@ namespace PC_Senior_Day12_MotionKit
 
         private void btnAx_Save_Click(object sender, EventArgs e)
         {
-            
-            //Button btn = sender as Button;
-            //Control ct = btn.Parent;
 
-            //    foreach (var ctr in ct.Controls)
-            //    {
-            //        if (ctr is TextBox)
-            //        {
-            //            TextBox tb = ctr as TextBox;
-            //            StringBuilder sb = new StringBuilder();
-            //            string key = tb.Name.ToString();
-            //            string Axis_ch = tb.Name.ToString().Split('_')[1];
-            //            string para_name = tb.Name.ToString().Split('_')[2];
-            //            string value = tb.Text.ToString();
-            //            int axis = Axis_ch == "X" ? 0 : Axis_ch == "Y" ? 1 : 2;
-            //        }
-            //    }
+            Button btn = sender as Button;
+
+            string Axis = btn.Name.ToString().Split('_')[1];
+
+            string[] para_file = File.ReadAllLines(path);
+
+            foreach (string para in para_file)
+            {
+                string key = para.Split('=')[0];
+                string val = para.Split('=')[1];
+
+                if (key.ToString().Split('_')[1] == Axis)
+                    continue;
+
+                pair[key].Text = val;
+            }
+
+
 
             File_Save();
         }

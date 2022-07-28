@@ -108,6 +108,8 @@
             this.btn_ZR = new System.Windows.Forms.Button();
             this.Timer_ZR = new System.Windows.Forms.Timer(this.components);
             this.btn_Init_Postion = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -928,11 +930,33 @@
             this.btn_Init_Postion.UseVisualStyleBackColor = true;
             this.btn_Init_Postion.Click += new System.EventHandler(this.btn_Init_Postion_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(502, 83);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(111, 23);
+            this.button3.TabIndex = 28;
+            this.button3.Text = "Move_Object";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(502, 112);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(42, 16);
+            this.checkBox1.TabIndex = 29;
+            this.checkBox1.Text = "ON";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 528);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.btn_Init_Postion);
             this.Controls.Add(this.btn_ZR);
             this.Controls.Add(this.button2);
@@ -965,6 +989,7 @@
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1049,6 +1074,8 @@
         private System.Windows.Forms.Button btn_ZR;
         private System.Windows.Forms.Timer Timer_ZR;
         private System.Windows.Forms.Button btn_Init_Postion;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

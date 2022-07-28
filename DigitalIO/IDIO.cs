@@ -10,5 +10,10 @@ namespace DigitalIO
     {
         sts[] In { get; }
         sts[] Out { get; }
+        void SetBit(short bitNo, sts val);
+        sts GetBit(int bitNo);
+        sts GetOutBit(int bitNo);
+
+
     }
 }

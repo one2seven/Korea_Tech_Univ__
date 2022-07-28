@@ -12,8 +12,12 @@ using System.IO;
 
 namespace MainControl
 {
+
+
+
     public class MotionKit : IConfig, ITeach
     {
+
         #region Field
         private Servo[] _axes;
         private Cylinder _gripper;
@@ -145,12 +149,12 @@ namespace MainControl
         { get { return _axes; } }
 
         public int ZR_Step { get { return zrStep; } set { zrStep = value; } }
-
         public double PosMovSpd { get => _posMovSpd; set => _posMovSpd = value; }
         public short PosMovAcc { get => _posMovAcc; set => _posMovAcc = value; }
         public short PosMovDec { get => _posMovDec; set => _posMovDec = value; }
-
         public bool Origin_Check { get { return _orgin_check; } set { _orgin_check = value; } }
+
+        
 
 
         #endregion
@@ -163,8 +167,8 @@ namespace MainControl
             _axes = new Servo[3];
             for (short i = 0; i < _axes.Length; i++)
                 _axes[i] = new Servo(i);
-            _gripper = new Cylinder();
             _dio = new DIO();
+            _gripper = new Cylinder(_dio);
             _xyPt = new Point[8];
             _zPt = new int[2];
             zrRpt = Msg.READY;
@@ -209,6 +213,104 @@ namespace MainControl
         /// <summary>
         /// 원점복귀
         /// </summary>
+        /// 
+
+        public void Origin_All()
+        {
+          
+
+
+        }
+
+        public void OriginReturn(short Axis)
+        {
+            try
+            {
+                _axes[Axis].Set_PSW_Limit(2000000);
+                _axes[Axis].Set_NSW_Limit(-2000000);
+
+                tempJogAcc = Axes[Axis].JogAcc;
+                tempJogDec = Axes[Axis].JogDec;
+                tempJogSpd = Axes[Axis].JogSpd;
+
+                Axes[Axis].JogSpd = ZRSpd1;
+                Axes[Axis].JogAcc = ZRAcc1;
+                Axes[Axis].JogMove(Dir.LEFT);
+
+                while (true)
+                {
+                    Axes[Axis].InfoUpdate();
+                    if (Axes[Axis].Home == true || Axes[Axis].RLS == true)
+                    {
+                        Axes[Axis].JogStop();
+                        if (Axes[Axis].RLS)
+                        {
+                            Thread.Sleep(1000);
+                            Axes[Axis].JogMove(Dir.RIGHT);
+                            while (true)
+                            {
+                                Axes[Axis].InfoUpdate();
+                                if (Axes[Axis].Home)
+                                {
+                                    Axes[Axis].JogStop();
+                                    break;
+                                }
+                                Thread.Sleep(10);
+                            }
+                        }
+                        break;
+                    }
+                    Thread.Sleep(10);
+                }
+
+
+                Thread.Sleep(1000);
+                Axes[Axis].JogSpd = ZRSpd2;
+                Axes[Axis].JogAcc = ZRAcc2;
+                Axes[Axis].JogMove(Dir.RIGHT);
+
+                while (true)
+                {
+                    Axes[Axis].InfoUpdate();
+                    if (Axes[Axis].Home == false)
+                    {
+                        Axes[Axis].JogStop();
+                        break;
+                    }
+                }
+
+                Thread.Sleep(1000);
+                Axes[Axis].JogSpd = ZRSpd3;
+                Axes[Axis].JogAcc = ZRAcc3;
+                Axes[Axis].JogMove(Dir.LEFT);
+
+                while (true)
+                {
+                    Axes[Axis].InfoUpdate();
+                    if (Axes[Axis].Home == true)
+                    {
+                        Axes[Axis].JogStop();
+                        break;
+                    }
+                }
+
+                Axes[Axis].JogSpd = tempJogSpd;
+                Axes[Axis].JogAcc = tempJogAcc;
+                _axes[Axis].Clear(); //*******
+                _axes[Axis].Limit_Set();
+                _axes[Axis].OriginDone = true;
+
+                if (_axes[0].OriginDone && _axes[1].OriginDone && _axes[2].OriginDone)
+                    Origin_Check = true;
+            }
+
+            catch
+            {
+                _axes[Axis].OriginDone = false;
+            }
+
+        }
+
         public Msg ZeroReturn(Msg cmd, short Axis)
         {
             switch (zrStep)
@@ -333,6 +435,7 @@ namespace MainControl
             _axes[0].InfoUpdate();
             _axes[1].InfoUpdate();
             _axes[2].InfoUpdate();
+            _dio.Update();
         }
 
         public void Teaching_Load()
@@ -465,6 +568,8 @@ namespace MainControl
 
             Z_PosMove(1);
             WaitMove();
+            _gripper.Close();
+            Thread.Sleep(1000);
 
             Z_PosMove(0);
             WaitMove();
@@ -474,6 +579,8 @@ namespace MainControl
 
             Z_PosMove(1);
             WaitMove();
+            _gripper.Open();
+            Thread.Sleep(1000);
 
             Z_PosMove(0);
         }

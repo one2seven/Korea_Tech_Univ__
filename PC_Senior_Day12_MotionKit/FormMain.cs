@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using MainControl;
 
@@ -26,7 +27,7 @@ namespace PC_Senior_Day12_MotionKit
         {
             short retErr = cart.Init();
             if (retErr != 0)
-                lbMsg.Text = "MMC 보드 초기화 실패 Code : " + retErr.ToString();    
+                lbMsg.Text = "MMC 보드 초기화 실패 Code : " + retErr.ToString();
             else
                 lbMsg.Text = "MMC 보드 초기화 성공";
 
@@ -41,7 +42,7 @@ namespace PC_Senior_Day12_MotionKit
         private void btnFormTeaching_Click(object sender, EventArgs e)
         {
             FormTeach frm = new FormTeach(cart);
-            frm.ShowDialog(); 
+            frm.ShowDialog();
         }
 
         private void btnFormDIO_Click(object sender, EventArgs e)
@@ -56,7 +57,7 @@ namespace PC_Senior_Day12_MotionKit
             if (btn != null)
             {
                 int axNo = Convert.ToInt32(btn.Tag);
-                cart[axNo].ServoOn(); 
+                cart[axNo].ServoOn();
             }
         }
         private void ServoOff_Click(object sender, EventArgs e)
@@ -135,9 +136,9 @@ namespace PC_Senior_Day12_MotionKit
 
         private void btn_Servo_Init_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 3; i++) 
+            for (int i = 0; i < 3; i++)
             {
-                cart[i].ServoOff();                
+                cart[i].ServoOff();
                 cart[i].AmpReset();
                 cart[i].Clear();
                 cart[i].ServoOn();
@@ -162,9 +163,18 @@ namespace PC_Senior_Day12_MotionKit
 
         private void btn_ZR_Click(object sender, EventArgs e)
         {
-            cmdZR = Msg.START;
-            axis_num = 0;
-            Timer_ZR.Start();   
+            //cart.OriginReturn(i);
+
+            Thread zrX = new Thread(() => cart.OriginReturn(0));
+            zrX.Start();
+            Thread zrY = new Thread(() => cart.OriginReturn(1));
+            zrY.Start();
+            Thread zrZ = new Thread(() => cart.OriginReturn(2));
+            zrZ.Start();
+
+            //cmdZR = Msg.START;
+            //axis_num = 0;
+            //Timer_ZR.Start();   
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -183,9 +193,39 @@ namespace PC_Senior_Day12_MotionKit
             {
                 MessageBox.Show("원점복귀가 되지않았습니다.");
             }
-
+            cart.Gripper.Open();
+            cart.Z_PosMove(0);
             cart.MoveInitPos();
         }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            Thread thread = new Thread(Move_OBJECT);
+            thread.Start();
+        }
+
+        private void Move_OBJECT()
+        {
+            int st = 0;
+            int ed = st + 1;
+
+            while (true)
+            {
+                st = st == 8 ? 0 : st;
+                ed = st == 7 ? 0 : st + 1;
+
+                cart.PickupPlace(st, ed);
+                st++;
+
+                if (checkBox1.Checked)
+                    break;
+
+                Thread.Sleep(2000);
+            }
+
+
+        }
+
 
         private void Timer_ZR_Tick(object sender, EventArgs e)
         {
@@ -194,7 +234,6 @@ namespace PC_Senior_Day12_MotionKit
                 Timer_ZR.Stop();
             }
 
-   
             rptZR = cart.ZeroReturn(cmdZR, axis_num);
             if (rptZR == Msg.READY && cmdZR == Msg.CHECK)
                 cmdZR = Msg.START;
@@ -202,7 +241,7 @@ namespace PC_Senior_Day12_MotionKit
                 cmdZR = Msg.CHECK;
             else if (rptZR == Msg.COMPLETE)
             {
-                cmdZR = axis_num <2? Msg.START:Msg.END;
+                cmdZR = axis_num < 2 ? Msg.START : Msg.END;
                 cart.ZR_Step = 0;
                 axis_num++;
             }

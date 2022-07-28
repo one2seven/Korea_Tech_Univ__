@@ -227,6 +227,7 @@
             this.btnCylClose.Tag = "1020";
             this.btnCylClose.Text = "CLOSE";
             this.btnCylClose.UseVisualStyleBackColor = true;
+            this.btnCylClose.Click += new System.EventHandler(this.btnCylClose_Click);
             // 
             // btnCylOpen
             // 
@@ -237,6 +238,7 @@
             this.btnCylOpen.Tag = "1010";
             this.btnCylOpen.Text = "OPEN";
             this.btnCylOpen.UseVisualStyleBackColor = true;
+            this.btnCylOpen.Click += new System.EventHandler(this.btnCylOpen_Click);
             // 
             // groupBox5
             // 
@@ -1070,9 +1072,9 @@
             // 
             // btnJogFwd
             // 
-            this.btnJogFwd.Location = new System.Drawing.Point(51, 21);
+            this.btnJogFwd.Location = new System.Drawing.Point(48, 113);
             this.btnJogFwd.Name = "btnJogFwd";
-            this.btnJogFwd.Size = new System.Drawing.Size(75, 39);
+            this.btnJogFwd.Size = new System.Drawing.Size(86, 39);
             this.btnJogFwd.TabIndex = 0;
             this.btnJogFwd.Tag = "Fwd";
             this.btnJogFwd.Text = "FORWARD";
@@ -1094,9 +1096,9 @@
             // 
             // btnJogBwd
             // 
-            this.btnJogBwd.Location = new System.Drawing.Point(51, 111);
+            this.btnJogBwd.Location = new System.Drawing.Point(48, 19);
             this.btnJogBwd.Name = "btnJogBwd";
-            this.btnJogBwd.Size = new System.Drawing.Size(75, 39);
+            this.btnJogBwd.Size = new System.Drawing.Size(86, 39);
             this.btnJogBwd.TabIndex = 0;
             this.btnJogBwd.Tag = "Bwd";
             this.btnJogBwd.Text = "BACKWARD";

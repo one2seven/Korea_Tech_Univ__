@@ -35,6 +35,8 @@ namespace Motion
         private double _pSWLimit, _nSWLimit;
         private bool _axisDone;
 
+        public bool OriginDone { get; set; }
+
         #endregion
         #endregion
         #region Property
@@ -330,7 +332,7 @@ namespace Motion
             }
             else if (_axNo == 2)
             {
-                _pSWLimit = 17670;
+                _pSWLimit = 20670;
                 _nSWLimit = -20448;
             }
 

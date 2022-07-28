@@ -44,5 +44,11 @@
     <Compile Include="Cylinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DigitalIO\DigitalIO.csproj">
+      <Project>{e93adced-ce7a-44ba-b3bd-d05f4fce73a4}</Project>
+      <Name>DigitalIO</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
